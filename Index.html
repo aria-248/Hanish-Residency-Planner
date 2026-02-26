@@ -1,0 +1,2960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- PWA Meta -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hanish">
+<meta name="application-name" content="Hanish">
+<meta name="theme-color" content="#0d1117">
+<meta name="background-color" content="#0d1117">
+<meta name="description" content="One day at a time — residency planner for Dr. Hanish">
+
+<!-- Inline Web App Manifest (no external file needed) -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Hanish+%C2%B7+One+day+at+a+time%22%2C%22short_name%22%3A%22Hanish%22%2C%22description%22%3A%22Residency+planner+for+Dr.+Hanish%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%230d1117%22%2C%22theme_color%22%3A%22%230d1117%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHn2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iIzBkMTExNyIvPjx0ZXh0IHg9IjI1NiIgeT0iMzMwIiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMjgwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWVhZmQ4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IPC90ZXh0Pjwvc3ZnPg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any+maskable%22%7D%5D%7D">
+
+<!-- Apple Touch Icon (inline SVG as base64) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iIzBkMTExNyIvPjx0ZXh0IHg9IjI1NiIgeT0iMzMwIiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMjgwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWVhZmQ4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IPC90ZXh0Pjwvc3ZnPg==">
+
+<title>Hanish · One day at a time</title>
+
+<!-- Fonts: loads DM Sans + DM Mono when online, system fonts offline -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── FONT STACK — DM Sans when loaded, system fonts as offline fallback ── */
+:root {
+  --bg:      #0d1117;
+  --s1:      #161b22;
+  --s2:      #1c2333;
+  --s3:      #21293a;
+  --border:  #253044;
+  --accent:  #5eafd8;
+  --accent2: #34d399;
+  --accent3: #a78bfa;
+  --warn:    #fbbf24;
+  --alert:   #f87171;
+  --alert-dim: rgba(248,113,113,0.1);
+  --accent-dim:  rgba(94,175,216,0.1);
+  --accent2-dim: rgba(52,211,153,0.1);
+  --warn-dim:    rgba(251,191,36,0.1);
+  --text:    #cdd9e5;
+  --text2:   #8b949e;
+  --muted:   #4a5568;
+  --mono: 'DM Mono', 'Roboto Mono', ui-monospace, monospace;
+  --sans: 'DM Sans', -apple-system, 'Roboto', system-ui, sans-serif;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.28);
+  --radius: 13px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+/* iOS: inputs must be 16px+ font-size to prevent auto-zoom on focus */
+input, textarea, select {
+  font-size: 16px;
+  -webkit-appearance: none;
+}
+/* Restore select dropdown arrow since we removed appearance */
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b949e'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px !important; }
+/* All tappable things need cursor:pointer for iOS click to fire */
+button, .checkbox-custom, .duty-chip, .section-card-header,
+.add-row-btn, .save-day-btn, .tab-btn, .nav-btn, .backup-btn,
+.counter-btn, .status-select, [onclick] {
+  cursor: pointer;
+}
+
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 54px;
+  gap: 2px;
+}
+.nav-logo {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  margin-right: auto;
+  color: var(--text);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-logo span {
+  color: var(--accent);
+}
+.nav-logo::after {
+  content: '· one day at a time';
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.nav-download-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--accent2);
+  background: none;
+  color: var(--accent2);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.14s ease;
+  line-height: 1;
+}
+.nav-download-btn:hover { background: var(--accent2); color: #0d1117; }
+.nav-download-btn:active { transform: scale(0.93); transition: transform 0.09s ease; }
+
+/* ── PAGES ── */
+.page { display: none; padding: 70px 0 calc(80px + env(safe-area-inset-bottom, 0px)); opacity: 0; transition: opacity 0.18s ease; }
+.page.active { display: block; animation: fadeInPage 0.22s ease forwards; }
+@keyframes fadeInPage { from { opacity:0; } to { opacity:1; } }
+
+/* ── TODAY PAGE ── */
+.today-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 18px;
+}
+.today-greeting {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+.today-subline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.2px;
+  margin-bottom: 28px;
+}
+.today-date {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.duty-toggle { display: flex; gap: 5px; }
+.duty-chip {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.5px;
+}
+.duty-chip:hover { color: var(--text); border-color: var(--text2); }
+.duty-chip.active-regular  { background: var(--accent2-dim); color: var(--accent2); border-color: var(--accent2); }
+.duty-chip.active-oncall   { background: var(--warn-dim);    color: var(--warn);    border-color: var(--warn); }
+.duty-chip.active-postcall { background: var(--accent-dim);  color: var(--accent);  border-color: var(--accent); }
+
+/* ── SWIPE HINT ── */
+.swipe-hint {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  padding: 6px 0 2px;
+  opacity: 0;
+  animation: fadeHint 3s ease 1.5s forwards;
+}
+@keyframes fadeHint {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.bulk-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+.bulk-popup button {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 10px;
+  background: var(--s3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.bulk-popup button:hover { background: var(--accent-dim); border-color: var(--accent); }
+.thesis-alert {
+  background: rgba(251,191,36,0.06);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-left: 3px solid var(--warn);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.thesis-alert:hover { background: rgba(251,191,36,0.1); }
+.thesis-alert.urgent {
+  background: rgba(248,113,113,0.06);
+  border-color: rgba(248,113,113,0.25);
+  border-left-color: var(--alert);
+}
+.thesis-alert-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--warn);
+  margin-bottom: 3px;
+}
+.thesis-alert.urgent .thesis-alert-label { color: var(--alert); }
+.thesis-alert-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.thesis-alert-days {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.daily-phrase-footer {
+  margin-top: 28px;
+  padding: 0 2px 4px;
+  text-align: center;
+}
+.daily-phrase-footer span {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+}
+
+/* ── POSTCALL MODE ── */
+body.postcall-mode .section-card { opacity: 0.65; }
+body.postcall-mode .section-card.priority-card { opacity: 1; }
+.postcall-banner {
+  display: none;
+  background: rgba(56,189,248,0.06);
+  border: 1px solid rgba(56,189,248,0.15);
+  border-radius: 8px;
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+body.postcall-mode .postcall-banner { display: block; }
+
+/* ── DUTY STREAK ── */
+.streak-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.streak-chip {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.streak-chip.oncall-streak  { border-color: rgba(251,191,36,0.4); color: var(--warn); background: var(--warn-dim); }
+.streak-chip.calls-month    { border-color: var(--border); color: var(--text2); }
+
+/* ── LAST UPDATED ── */
+.section-timestamp {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-left: auto;
+  letter-spacing: 0.3px;
+}
+
+/* ── WEEKLY SUMMARY ── */
+.weekly-summary {
+  background: linear-gradient(135deg, rgba(52,211,153,0.07), rgba(56,189,248,0.07));
+  border: 1px solid rgba(52,211,153,0.2);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.weekly-summary-title {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--accent2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.weekly-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.weekly-stat { display: flex; flex-direction: column; gap: 2px; }
+.weekly-stat .wn { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+.weekly-stat .wl { font-family: var(--mono); font-size: 8px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+/* ── ON-CALL LOG (in Academic tab) ── */
+.call-log-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.call-day {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.call-day:hover { border-color: var(--warn); }
+.call-day.is-call { background: var(--warn-dim); border-color: var(--warn); color: var(--warn); font-weight: 700; }
+.call-day.is-today { border-color: var(--accent); }
+.call-day.future { opacity: 0.3; cursor: default; pointer-events: none; }
+.call-month-header {
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.call-total-badge {
+  font-family: var(--mono); font-size: 10px;
+  background: var(--warn-dim); color: var(--warn);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 20px; padding: 3px 10px;
+}
+
+.must-forget {
+  background: linear-gradient(135deg, rgba(56,189,248,0.07), rgba(167,139,250,0.07));
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.must-forget label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.must-forget textarea {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  color: #e6edf3;
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.4;
+  resize: none;
+  overflow: hidden;
+  max-height: 5.6em;
+  display: block;
+  transition: height 0.15s ease;
+}
+.must-forget textarea::placeholder { color: rgba(56,189,248,0.25); font-weight: 400; }
+
+.section-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.18s;
+  box-shadow: var(--card-shadow);
+}
+.section-card:hover { border-color: #2d3f5a; }
+.section-card-header {
+  padding: 13px 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.section-card-header:hover { color: var(--text2); }
+.section-card-header.open { border-bottom-color: var(--border); color: var(--text2); }
+.section-card-body { display: none; padding: 14px 16px; }
+.section-card-body.open { display: block; }
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(37,48,68,0.6);
+}
+.input-row:last-child { border-bottom: none; padding-bottom: 0; }
+.input-row input[type="text"], .input-row input[type="number"] {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.input-row input::placeholder { color: var(--muted); }
+.add-row-btn {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  padding: 9px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.add-row-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.checkbox-custom {
+  width: 16px; height: 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.checkbox-custom:hover { border-color: var(--accent2); }
+.checkbox-custom.checked { background: var(--accent2); border-color: var(--accent2); animation: cbPop 0.18s ease; }
+.checkbox-custom.checked::after { content: '✓'; font-size: 10px; color: #0d1117; font-weight: 700; }
+@keyframes cbPop { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)} }
+
+/* Tactile press for all interactive buttons */
+.duty-chip:active, .add-row-btn:active, .backup-btn:active,
+.counter-btn:active, .tab-btn:active, .filter-chip:active,
+.acad-counter-btn:active, .leave-btn:active, .ms-add-todo:active,
+.conf-del:active, .pub-del:active, .handover-del:active {
+  transform: scale(0.97);
+  transition: transform 0.09s ease;
+}
+
+.save-day-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #1a7a8a, #1e6b7a);
+  border: 1px solid rgba(94,175,216,0.3);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.14s ease;
+}
+.save-day-btn:hover { background: linear-gradient(135deg, #1e8a9c, #227a8e); box-shadow: 0 4px 20px rgba(94,175,216,0.12); }
+.save-day-btn:active { transform: scale(0.97); transition: transform 0.1s ease; }
+
+/* ── THESIS PAGE ── */
+.thesis-wrap { max-width: 580px; margin: 0 auto; padding: 28px 18px; }
+.page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+.page-subtitle { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 24px; }
+
+/* Filter bar */
+.thesis-filter { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-chip {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);
+  background: none; color: var(--muted); cursor: pointer; transition: all 0.15s;
+  text-transform: uppercase;
+}
+.filter-chip:hover { color: var(--text2); border-color: var(--text2); }
+.filter-chip.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+.milestone-row {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 8px;
+  transition: border-color 0.2s, opacity 0.2s;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+.milestone-row:hover { border-color: #2d3f5a; border-left-color: inherit; }
+.milestone-row.status-notstarted { border-left-color: var(--muted); }
+.milestone-row.status-inprogress { border-left-color: var(--accent); }
+.milestone-row.status-done { border-left-color: var(--accent2); }
+.milestone-row.status-atrisk { border-left-color: var(--warn); }
+.milestone-row.collapsed-done { opacity: 0.45; }
+
+/* Milestone header (always visible, tappable to expand) */
+.ms-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; cursor: pointer; user-select: none;
+}
+.ms-header-left { flex: 1; min-width: 0; }
+.ms-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-meta { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 3px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.ms-chevron { font-size: 11px; color: var(--muted); transition: transform 0.2s; flex-shrink: 0; }
+.ms-chevron.open { transform: rotate(180deg); }
+
+/* Milestone body (collapsible) */
+.ms-body { display: none; padding: 0 16px 14px; border-top: 1px solid rgba(37,48,68,0.6); }
+.ms-body.open { display: block; }
+
+.milestone-dates { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; padding-top: 12px; }
+.date-field { display: flex; flex-direction: column; gap: 4px; }
+.date-field label {
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.date-field input[type="date"] {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font-family: var(--mono); font-size: 16px;
+  padding: 6px 10px; outline: none; color-scheme: dark; transition: border-color 0.15s;
+}
+.date-field input[type="date"]:focus { border-color: var(--accent); }
+
+.ms-status-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.status-select {
+  font-family: var(--mono); font-size: 10px; padding: 7px 10px;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--s2); color: var(--text); outline: none;
+  cursor: pointer; transition: border-color 0.15s;
+}
+.status-select:focus { border-color: var(--accent); }
+
+.days-left-badge {
+  font-family: var(--mono); font-size: 10px; padding: 3px 9px;
+  border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;
+}
+.days-urgent { background: var(--alert-dim); color: var(--alert); }
+.days-warn   { background: var(--warn-dim);  color: var(--warn); }
+.days-ok     { background: var(--accent2-dim); color: var(--accent2); }
+
+/* Todo list inside milestone */
+.ms-todo-label {
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+.ms-todo-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.ms-todo-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 6px;
+  background: var(--s2); border: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.ms-todo-item:hover { border-color: var(--border); }
+.ms-todo-item.done-item { opacity: 0.45; }
+.ms-todo-item.done-item .todo-text { text-decoration: line-through; color: var(--muted); }
+.todo-cb {
+  width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; background: none;
+}
+.todo-cb:hover { border-color: var(--accent2); }
+.todo-cb.checked { background: var(--accent2); border-color: var(--accent2); }
+.todo-cb.checked::after { content: '✓'; font-size: 10px; color: #0d1117; font-weight: 700; }
+.todo-text {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans);
+  padding: 0; line-height: 1.4;
+}
+.todo-text::placeholder { color: var(--muted); }
+.todo-del {
+  color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 2px;
+  background: none; border: none; line-height: 1; flex-shrink: 0;
+  transition: color 0.15s;
+}
+.todo-del:hover { color: var(--alert); }
+.ms-add-todo {
+  width: 100%; background: none; border: 1px dashed var(--border);
+  border-radius: 6px; color: var(--muted); font-family: var(--mono);
+  font-size: 9px; letter-spacing: 1.5px; padding: 8px; cursor: pointer;
+  margin-top: 4px; transition: all 0.15s; text-transform: uppercase;
+}
+.ms-add-todo:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Compact todo progress in header */
+.todo-progress-dots { display: flex; gap: 3px; align-items: center; }
+.todo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.todo-dot.done { background: var(--accent2); }
+.todo-dot.more { font-family: var(--mono); font-size: 8px; color: var(--muted); width: auto; height: auto; background: none; }
+
+/* ── LOGBOOK PAGE ── */
+.logbook-wrap { max-width: 480px; margin: 0 auto; padding: 28px 18px; }
+.total-bar {
+  background: linear-gradient(135deg, var(--s1), var(--s2));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total-label { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.total-nums { display: flex; gap: 24px; }
+.total-num { text-align: center; }
+.total-num .n { font-size: 26px; font-weight: 700; letter-spacing: -1px; }
+.total-num .l { font-family: var(--mono); font-size: 8px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+.logbook-row {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 8px;
+  transition: border-color 0.18s;
+  box-shadow: var(--card-shadow);
+}
+.logbook-row:hover { border-color: #2d3f5a; }
+.logrow-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.logrow-name { font-size: 14px; font-weight: 600; }
+.logrow-status { font-family: var(--mono); font-size: 9px; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.logrow-counters { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.counter-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.counter-box label { font-family: var(--mono); font-size: 8px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.counter-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.counter-btn {
+  width: 32px; height: 32px;
+  background: var(--s2);
+  border: none;
+  color: var(--text2);
+  font-size: 16px;
+  cursor: pointer;
+  font-family: var(--mono);
+  transition: all 0.12s;
+  display: flex; align-items: center; justify-content: center;
+}
+.counter-btn:hover { background: var(--s3); color: var(--accent); }
+.counter-btn:active { background: var(--border); }
+.counter-val {
+  width: 44px; height: 32px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  color: white;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+}
+.progress-track { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent2); border-radius: 4px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.progress-fill.warn   { background: var(--warn); }
+.progress-fill.urgent { background: var(--accent); }
+
+/* ── BOTTOM TAB BAR ── */
+.tab-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(13,17,23,0.96);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  height: auto;
+  min-height: 62px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 100;
+}
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition: color 0.18s;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.tab-btn .icon { font-size: 19px; }
+.tab-btn .icon-sym { font-size: 22px; line-height: 1; }
+.tab-btn.active { color: var(--accent); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 72px; left: 50%; transform: translateX(-50%) translateY(8px);
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--accent2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 10px 22px;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 200;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SETUP BANNER ── */
+.setup-banner {
+  background: var(--warn-dim);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--warn);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* ── MISC ── */
+.chevron { transition: transform 0.2s ease; font-size: 10px; }
+.chevron.open { transform: rotate(180deg); }
+
+.backup-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-align: left;
+  transition: all 0.18s;
+  font-family: var(--sans);
+}
+.export-btn:hover { border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.06); }
+.import-btn:hover { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.06); }
+
+/* ── ACADEMIC PAGE ── */
+.academic-wrap { max-width: 540px; margin: 0 auto; padding: 28px 18px; }
+
+/* Exam countdown */
+.exam-countdown-card {
+  background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(167,139,250,0.08));
+  border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.exam-countdown-left { flex: 1; min-width: 120px; }
+.exam-label { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.exam-days { font-size: 42px; font-weight: 700; letter-spacing: -2px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+.exam-days.warn { color: var(--warn); }
+.exam-days.urgent { color: var(--alert); }
+.exam-date-display { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.exam-countdown-right { display: flex; flex-direction: column; }
+
+/* Academic requirement rows */
+.acad-req-row {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.acad-req-left { flex: 1; min-width: 0; }
+.acad-req-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.acad-req-sub { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+.acad-req-right { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.acad-counter-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.acad-counter-btn {
+  width: 30px; height: 30px; background: var(--s2); border: none;
+  color: var(--text2); font-size: 16px; cursor: pointer; font-family: var(--mono);
+  transition: all 0.12s; display: flex; align-items: center; justify-content: center;
+}
+.acad-counter-btn:hover { background: var(--s3); color: var(--accent); }
+.acad-counter-val {
+  width: 36px; height: 30px; background: none; border: none;
+  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+  color: white; font-family: var(--mono); font-size: 14px; font-weight: 600;
+  text-align: center; outline: none;
+}
+.acad-pct { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.acad-progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.acad-progress-fill { height: 100%; background: var(--accent2); border-radius: 3px; transition: width 0.4s ease; }
+.acad-progress-fill.warn { background: var(--warn); }
+.acad-progress-fill.urgent { background: var(--alert); }
+.acad-target-label { font-family: var(--mono); font-size: 8px; color: var(--muted); }
+
+/* Conference log */
+.conf-row {
+  background: var(--s1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 13px 14px; margin-bottom: 6px;
+}
+.conf-row-top { display: flex; align-items: flex-start; gap: 10px; }
+.conf-name-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans);
+  font-weight: 500; padding: 0;
+}
+.conf-name-input::placeholder { color: var(--muted); font-weight: 400; }
+.conf-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 2px; transition: color 0.15s; flex-shrink: 0; }
+.conf-del:hover { color: var(--alert); }
+.conf-row-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.conf-date-input {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 5px;
+  color: var(--text2); font-family: var(--mono); font-size: 11px;
+  padding: 4px 8px; outline: none; color-scheme: dark;
+}
+.conf-type-select {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 5px;
+  color: var(--text2); font-family: var(--mono); font-size: 11px;
+  padding: 4px 8px; outline: none; cursor: pointer;
+}
+.conf-cert-chip {
+  font-family: var(--mono); font-size: 9px; padding: 4px 10px;
+  border-radius: 20px; border: 1px solid var(--border);
+  background: none; color: var(--muted); cursor: pointer; transition: all 0.15s;
+}
+.conf-cert-chip.got { background: var(--accent2-dim); color: var(--accent2); border-color: var(--accent2); }
+
+/* Leave grid */
+.leave-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.leave-card {
+  background: var(--s1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.leave-card-title { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.leave-card-nums { display: flex; align-items: baseline; gap: 6px; }
+.leave-card-used { font-size: 24px; font-weight: 700; letter-spacing: -1px; color: var(--warn); }
+.leave-card-total { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.leave-card-remaining { font-family: var(--mono); font-size: 9px; color: var(--accent2); }
+.leave-ctrl { display: flex; gap: 6px; align-items: center; }
+.leave-btn {
+  width: 26px; height: 26px; background: var(--s2); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text2); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.12s;
+}
+.leave-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Publications */
+.pub-row {
+  background: var(--s1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 13px 14px; margin-bottom: 6px; border-left: 3px solid var(--border);
+}
+.pub-row.submitted { border-left-color: var(--warn); }
+.pub-row.accepted { border-left-color: var(--accent2); }
+.pub-row.presented { border-left-color: var(--accent3); }
+.pub-row-top { display: flex; gap: 10px; align-items: flex-start; }
+.pub-title-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans);
+  font-weight: 500; padding: 0;
+}
+.pub-title-input::placeholder { color: var(--muted); font-weight: 400; }
+.pub-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 0 2px; transition: color 0.15s; }
+.pub-del:hover { color: var(--alert); }
+.pub-row-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.pub-type-select, .pub-status-select {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 5px;
+  color: var(--text2); font-family: var(--mono); font-size: 11px;
+  padding: 4px 8px; outline: none; cursor: pointer;
+}
+
+/* Handover list */
+.handover-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid rgba(37,48,68,0.6);
+}
+.handover-item:last-child { border-bottom: none; }
+.handover-urgency {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  margin-top: 5px; cursor: pointer; transition: transform 0.15s;
+}
+.handover-urgency:hover { transform: scale(1.4); }
+.handover-urgency.normal { background: var(--accent2); }
+.handover-urgency.watch { background: var(--warn); }
+.handover-urgency.critical { background: var(--alert); }
+.handover-text-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans);
+  resize: none; min-height: 22px; line-height: 1.4; padding: 0;
+}
+.handover-text-input::placeholder { color: var(--muted); }
+.handover-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px; transition: color 0.15s; flex-shrink: 0; }
+.handover-del:hover { color: var(--alert); }
+
+/* ── TODAY GREETING ── */
+.today-greeting {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+.today-subline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.2px;
+  margin-bottom: 28px;
+}
+
+@media (min-width: 600px) {
+  nav { display: flex; }
+  .tab-bar { display: none; }
+  .page { padding-top: 54px; padding-bottom: 20px; }
+  #backup-drawer { left: 0; right: 0; max-width: 480px; margin: 0 auto; border-radius: 18px; bottom: 40px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV (desktop) -->
+<nav>
+  <div class="nav-logo"><span>Hanish</span></div>
+  <button class="nav-download-btn" onclick="toggleBackup()" title="Backup &amp; Restore">↓</button>
+</nav>
+
+<!-- TODAY PAGE (merged with Home) -->
+<div id="page-today" class="page active">
+  <div class="today-wrap">
+
+    <!-- Greeting header -->
+    <div class="today-greeting" id="today-greeting">Good morning, Dr. Hanish.</div>
+    <div class="today-subline">Everything important is captured here.</div>
+
+    <!-- Date + duty -->
+    <div class="today-date">
+      <span id="today-date-label"></span>
+      <div class="duty-toggle">
+        <button class="duty-chip" id="duty-regular" onclick="setDuty('regular')">Regular</button>
+        <button class="duty-chip" id="duty-oncall" onclick="setDuty('oncall')">On-call</button>
+        <button class="duty-chip" id="duty-postcall" onclick="setDuty('postcall')">Post-call</button>
+      </div>
+    </div>
+
+    <div class="postcall-banner" id="postcall-banner">post-call — minimum viable today. rest is clinical.</div>
+
+    <div class="streak-row" id="streak-row"></div>
+
+    <div id="weekly-summary-slot"></div>
+
+    <div class="must-forget">
+      <label>✦ ONE THING I CANNOT FORGET TODAY</label>
+      <div style="position:relative;">
+        <textarea id="must-forget-input"
+          placeholder="Type it here..."
+          maxlength="200"
+          rows="1"></textarea>
+        <div id="must-forget-fade"
+          style="
+            position:absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            height:28px;
+            pointer-events:none;
+            background:linear-gradient(to bottom, rgba(13,17,23,0) 0%, rgba(13,17,23,0.85) 100%);
+            opacity:0;
+            transition:opacity 0.2s ease;
+          ">
+        </div>
+      </div>
+    </div>
+
+    <!-- Surgeries -->
+    <div class="section-card">
+      <div class="section-card-header" onclick="toggleCard(this)">
+        SURGERIES TODAY
+        <span class="chevron">▾</span>
+      </div>
+      <div class="section-card-body" id="surgeries-body">
+        <div id="surgery-list"></div>
+        <button class="add-row-btn" onclick="addSurgery()">+ ADD SURGERY</button>
+      </div>
+    </div>
+
+    <!-- Follow-ups -->
+    <div class="section-card">
+      <div class="section-card-header" onclick="toggleCard(this)">
+        FOLLOW-UPS / ROUNDS
+        <span class="chevron">▾</span>
+      </div>
+      <div class="section-card-body" id="followups-body">
+        <div id="followup-list"></div>
+        <button class="add-row-btn" onclick="addFollowup()">+ ADD FOLLOW-UP</button>
+      </div>
+    </div>
+
+    <!-- Quick checks -->
+    <div class="section-card">
+      <div class="section-card-header" onclick="toggleCard(this)">
+        END-OF-SHIFT CHECKS
+        <span class="chevron">▾</span>
+      </div>
+      <div class="section-card-body" id="checks-body">
+        <div class="input-row">
+          <div class="checkbox-custom" id="check-thesis" onclick="toggleCheck('check-thesis')"></div>
+          <span style="font-size:13px">Thesis — did anything move today?</span>
+        </div>
+        <div class="input-row">
+          <div class="checkbox-custom" id="check-logbook" onclick="toggleCheck('check-logbook')"></div>
+          <span style="font-size:13px">Logbook — any surgeries to log?</span>
+        </div>
+        <div class="input-row">
+          <div class="checkbox-custom" id="check-academic" onclick="toggleCheck('check-academic')"></div>
+          <span style="font-size:13px">Academic — seminar / journal club due?</span>
+        </div>
+        <div class="input-row">
+          <div class="checkbox-custom" id="check-handover" onclick="toggleCheck('check-handover')"></div>
+          <span style="font-size:13px">Handover done — critical patients briefed?</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Handover -->
+    <div class="section-card">
+      <div class="section-card-header" onclick="toggleCard(this)">
+        🔁 HANDOVER NOTES
+        <span class="chevron">▾</span>
+      </div>
+      <div class="section-card-body" id="handover-body">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:10px;line-height:1.8;">Fill before leaving. Hand this to the incoming resident.</div>
+        <div id="handover-list"></div>
+        <button class="add-row-btn" onclick="addHandover()">+ ADD CRITICAL PATIENT</button>
+      </div>
+    </div>
+
+    <!-- Brain dump -->
+    <div class="section-card">
+      <div class="section-card-header" onclick="toggleCard(this)">
+        BRAIN DUMP
+        <span class="chevron">▾</span>
+      </div>
+      <div class="section-card-body" id="braindump-body">
+        <textarea id="brain-dump-text" placeholder="Dump anything here..." style="width:100%;background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:16px;line-height:1.8;resize:none;min-height:80px;color-scheme:dark"></textarea>
+      </div>
+    </div>
+
+    <button class="save-day-btn" onclick="saveDay()">Close the Day ↓</button>
+
+    <div class="daily-phrase-footer">
+      <span id="phrase-text"></span>
+    </div>
+  </div>
+</div>
+
+<!-- THESIS PAGE -->
+<div id="page-thesis" class="page">
+  <div class="thesis-wrap">
+    <div class="page-title">◈ Thesis</div>
+    <div class="page-subtitle" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Tap a milestone to expand. Add tasks inside each stage.</span>
+      <span class="section-timestamp" id="thesis-timestamp"></span>
+    </div>
+
+    <div id="thesis-setup-banner" class="setup-banner" style="display:none">
+      ⚠ FIRST TIME: Fill in your Hard Deadlines from your university calendar. Do it now — takes 3 minutes and you'll never need to do it again.
+    </div>
+
+    <div class="thesis-filter">
+      <button class="filter-chip active" id="filter-all" onclick="setThesisFilter('all')">ALL</button>
+      <button class="filter-chip" id="filter-active" onclick="setThesisFilter('active')">ACTIVE</button>
+      <button class="filter-chip" id="filter-atrisk" onclick="setThesisFilter('atrisk')">⚠ AT RISK</button>
+      <button class="filter-chip" id="filter-done" onclick="setThesisFilter('done')">✓ DONE</button>
+    </div>
+
+    <div id="milestone-list"></div>
+  </div>
+</div>
+
+<!-- LOGBOOK PAGE -->
+<div id="page-logbook" class="page">
+  <div class="logbook-wrap">
+    <div class="page-title">◎ Logbook</div>
+    <div class="page-subtitle" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Tap + to add surgeries. Update weekly.</span>
+      <span class="section-timestamp" id="logbook-timestamp"></span>
+    </div>
+
+    <div class="total-bar">
+      <div class="total-label">TOTAL<br>PROGRESS</div>
+      <div class="total-nums">
+        <div class="total-num">
+          <div class="n" id="total-done" style="color:var(--accent2)">0</div>
+          <div class="l">DONE</div>
+        </div>
+        <div class="total-num">
+          <div class="n" id="total-target" style="color:var(--muted)">0</div>
+          <div class="l">TARGET</div>
+        </div>
+        <div class="total-num">
+          <div class="n" id="total-remaining" style="color:var(--amber)">0</div>
+          <div class="l">LEFT</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="logbook-list"></div>
+  </div>
+</div>
+
+<!-- ACADEMIC PAGE -->
+<div id="page-academic" class="page">
+  <div class="academic-wrap">
+    <div class="page-title">🎓 Academic</div>
+    <div class="page-subtitle">Requirements that gate your exam eligibility.</div>
+
+    <!-- Exam countdown -->
+    <div class="exam-countdown-card" id="exam-countdown-card">
+      <div class="exam-countdown-left">
+        <div class="exam-label">MS FINALS</div>
+        <div class="exam-days" id="exam-days-display">— days</div>
+        <div class="exam-date-display" id="exam-date-display">Set your exam date →</div>
+      </div>
+      <div class="exam-countdown-right">
+        <label style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px;">EXAM DATE</label>
+        <input type="date" id="exam-date-input" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:6px;color:var(--accent);font-family:var(--mono);font-size:14px;padding:8px 10px;outline:none;color-scheme:dark;" onchange="setExamDate(this.value)">
+      </div>
+    </div>
+
+    <!-- On-call log -->
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px;">ON-CALL LOG — THIS MONTH</div>
+    <div class="call-month-header">
+      <span id="call-month-label"></span>
+      <span class="call-total-badge" id="call-total-badge">0 calls</span>
+    </div>
+    <div class="call-log-grid" id="call-log-grid"></div>
+
+    <!-- Academic requirements -->
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px;">MANDATORY REQUIREMENTS</div>
+    <div id="academic-req-list"></div>
+
+    <!-- Conferences / CME log -->
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px;">CONFERENCES &amp; CME LOG</div>
+    <div id="conference-list"></div>
+    <button class="add-row-btn" onclick="addConference()" style="margin-bottom:20px;">+ ADD CONFERENCE / CME</button>
+
+    <!-- Leave tracker -->
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px;">LEAVE BALANCE</div>
+    <div class="leave-grid" id="leave-grid"></div>
+
+    <!-- Publications -->
+    <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:20px 0 10px;">PUBLICATIONS &amp; PRESENTATIONS</div>
+    <div id="pubs-list"></div>
+    <button class="add-row-btn" onclick="addPublication()" style="margin-bottom:20px;">+ ADD PAPER / POSTER / PRESENTATION</button>
+  </div>
+</div>
+
+<!-- BOTTOM TAB BAR (mobile) -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('today')" id="tab-today">
+    <span class="icon">⚡</span>TODAY
+  </button>
+  <button class="tab-btn" onclick="showPage('thesis')" id="tab-thesis">
+    <span class="icon-sym">◈</span>THESIS
+  </button>
+  <button class="tab-btn" onclick="showPage('logbook')" id="tab-logbook">
+    <span class="icon-sym">◎</span>LOGBOOK
+  </button>
+  <button class="tab-btn" onclick="showPage('academic')" id="tab-academic">
+    <span class="icon">🎓</span>ACADEMIC
+  </button>
+</div>
+<div id="swipe-hint-bar" class="swipe-hint" style="position:fixed;bottom:62px;left:0;right:0;z-index:99;display:none;">← swipe to navigate →</div>
+
+<!-- BACKUP DRAWER -->
+<div id="backup-overlay" onclick="toggleBackup()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:150;backdrop-filter:blur(4px);width:100vw;height:100vh;left:0;top:0;"></div>
+<div id="backup-drawer" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--s1);border-top:1px solid var(--border);border-radius:18px 18px 0 0;padding:24px 20px 40px;max-width:480px;margin:0 auto;">
+  <div style="width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 20px;"></div>
+  <div style="font-size:15px;font-weight:700;margin-bottom:4px;">☁︎ Backup &amp; Restore</div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:24px;line-height:1.7;">Your data lives in this browser only.<br>Export weekly to avoid losing it.</div>
+
+  <button class="backup-btn export-btn" onclick="exportData()">
+    <span style="font-size:20px">⬇</span>
+    <div>
+      <div style="font-weight:600;font-size:14px;">Export Backup</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-top:2px;">Downloads hanish_planner_backup.json</div>
+    </div>
+  </button>
+
+  <div style="position:relative;margin-bottom:10px;">
+    <button class="backup-btn import-btn" style="width:100%;pointer-events:none;">
+      <span style="font-size:20px">⬆</span>
+      <div>
+        <div style="font-weight:600;font-size:14px;">Restore from Backup</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);margin-top:2px;">Pick a hanish_planner_backup.json file</div>
+      </div>
+    </button>
+    <input type="file" id="import-file" accept=".json,.JSON" onchange="importData(event)"
+      style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;">
+  </div>
+
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:20px;padding:12px;background:var(--s2);border-radius:8px;line-height:1.8;">
+    💡 <strong style="color:var(--text2)">iPhone tip:</strong> After tapping Export, use Share → Save to Files. <br>
+    💡 <strong style="color:var(--text2)">Best habit:</strong> Export every Sunday. Send the file to yourself on WhatsApp or email. Restore any time on any device.
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const DEFAULT_MILESTONES = [
+  { id: 'm1', name: 'EC Submission',            hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm2', name: 'EC Approval',              hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm3', name: 'Data Collection Complete', hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm4', name: 'Analysis Done',            hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm5', name: 'First Draft → Guide',      hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm6', name: 'Guide Approval',           hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm7', name: 'Plagiarism Check',         hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm8', name: 'University Submission',    hardDeadline: '', status: 'notstarted', nextAction: '' },
+  { id: 'm9', name: 'Viva',                     hardDeadline: '', status: 'notstarted', nextAction: '' },
+];
+
+const DEFAULT_LOGBOOK = [
+  { id: 'l1', name: 'Trauma',        done: 0, target: 60 },
+  { id: 'l2', name: 'Arthroplasty',  done: 0, target: 20 },
+  { id: 'l3', name: 'Spine',         done: 0, target: 15 },
+  { id: 'l4', name: 'Arthroscopy',   done: 0, target: 15 },
+  { id: 'l5', name: 'Elective',      done: 0, target: 30 },
+];
+
+// NMC-mandated academic requirements for MS Orthopaedics
+const DEFAULT_ACADEMIC_REQS = [
+  { id: 'a1', name: 'Seminar Presentations',   done: 0, target: 12, unit: 'presentations', note: 'Min 1/month' },
+  { id: 'a2', name: 'Journal Club Presentations', done: 0, target: 12, unit: 'presentations', note: 'Min 1/month' },
+  { id: 'a3', name: 'Case Presentations',      done: 0, target: 6,  unit: 'cases',         note: 'Grand rounds' },
+  { id: 'a4', name: 'CME / Workshop Hours',    done: 0, target: 30, unit: 'hours',         note: 'AO, IOA etc.' },
+  { id: 'a5', name: 'IOA Annual Conference',   done: 0, target: 1,  unit: 'attended',      note: 'Membership req.' },
+];
+
+const DEFAULT_LEAVE = [
+  { id: 'lv1', name: 'Casual Leave',  used: 0, total: 8 },
+  { id: 'lv2', name: 'Sick Leave',    used: 0, total: 10 },
+  { id: 'lv3', name: 'Study Leave',   used: 0, total: 5 },
+  { id: 'lv4', name: 'On-Call Comp',  used: 0, total: 0 },
+];
+
+function safeParse(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch(e) {
+    console.warn('safeParse failed for', key, e);
+    return fallback;
+  }
+}
+
+// Migrate old jr3_ keys to hanish_ on first run
+(function migrateKeys() {
+  const keyMap = ['today','milestones','logbook','academicReqs','conferences','publications','leave','callLog','timestamps','examDate'];
+  keyMap.forEach(k => {
+    const oldKey = 'jr3_' + k;
+    const newKey = 'hanish_' + k;
+    if (localStorage.getItem(oldKey) !== null && localStorage.getItem(newKey) === null) {
+      localStorage.setItem(newKey, localStorage.getItem(oldKey));
+    }
+  });
+})();
+
+function loadData() {
+  return {
+    today:       safeParse('hanish_today', {}),
+    milestones:  safeParse('hanish_milestones', null) || DEFAULT_MILESTONES,
+    logbook:     safeParse('hanish_logbook', null)     || DEFAULT_LOGBOOK,
+    academicReqs:safeParse('hanish_academicReqs', null)|| DEFAULT_ACADEMIC_REQS,
+    conferences: safeParse('hanish_conferences', null) || [],
+    publications:safeParse('hanish_publications', null)|| [],
+    leave:       safeParse('hanish_leave', null)       || DEFAULT_LEAVE,
+    callLog:     safeParse('hanish_callLog', null)     || {},
+    timestamps:  safeParse('hanish_timestamps', null)  || {},
+    examDate:    localStorage.getItem('hanish_examDate') || '',
+  };
+}
+
+function save(key, value) {
+  try {
+    if (key === 'examDate') {
+      localStorage.setItem('hanish_examDate', value);
+    } else {
+      localStorage.setItem('hanish_' + key, JSON.stringify(value));
+    }
+  } catch(e) {
+    showToast('⚠ Storage full — export a backup now');
+  }
+}
+
+// ── Prune today entries: remove days >90 days old with no meaningful content ──
+function pruneOldDays(todayMap) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  let pruned = 0;
+  Object.keys(todayMap).forEach(k => {
+    if (k < cutoffStr) {
+      const d = todayMap[k];
+      const isEmpty = !d.mustForget && !(d.surgeries && d.surgeries.length) &&
+                      !(d.followups && d.followups.length) && !d.brainDump;
+      if (isEmpty) { delete todayMap[k]; pruned++; }
+    }
+  });
+  return pruned;
+}
+
+// ── Guard: don't persist an empty day entry (saves storage) ──
+function saveTodayIfMeaningful() {
+  const t = getToday();
+  if (!t) return;
+  const isEmpty = !t.mustForget && !t.duty &&
+    !(t.surgeries && t.surgeries.length) &&
+    !(t.followups && t.followups.length) &&
+    !(t.handover && t.handover.length) &&
+    !t.brainDump;
+  if (isEmpty) {
+    // Remove the blank skeleton entry before saving
+    delete data.today[getTodayKey()];
+  }
+  save('today', data.today);
+  // Re-add skeleton in memory only (not in storage) so session stays functional
+  if (isEmpty) data.today[getTodayKey()] = t;
+}
+
+function touchTimestamp(section) {
+  if (!data.timestamps) data.timestamps = {};
+  data.timestamps[section] = new Date().toISOString();
+  save('timestamps', data.timestamps);
+}
+
+function renderTimestamp(elId, section) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const ts = data.timestamps && data.timestamps[section];
+  if (!ts) { el.textContent = ''; return; }
+  const d = new Date(ts);
+  const now = new Date();
+  const diffDays = Math.floor((now - d) / 86400000);
+  if (diffDays === 0) el.textContent = 'updated today';
+  else if (diffDays === 1) el.textContent = 'updated yesterday';
+  else el.textContent = `updated ${diffDays}d ago`;
+}
+
+let data = loadData();
+// Prune stale empty day entries to keep storage lean
+(function() { const n = pruneOldDays(data.today); if (n > 0) save('today', data.today); })();
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+
+// ── Lazy init — only initialise a page when first visited ──
+const _pageInited = { today: false, thesis: false, logbook: false, academic: false };
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('tab-' + name)?.classList.add('active');
+  // Lazy init
+  if (!_pageInited[name]) {
+    _pageInited[name] = true;
+    if (name === 'thesis')   initThesis();
+    if (name === 'logbook')  initLogbook();
+    if (name === 'academic') initAcademic();
+  }
+}
+
+// ══════════════════════════════════════════
+// TODAY PAGE
+// ══════════════════════════════════════════
+
+function initToday() {
+  // Time-aware greeting
+  const hour = new Date().getHours();
+  let period = 'morning';
+  if (hour >= 12 && hour < 17) period = 'afternoon';
+  else if (hour >= 17 && hour < 21) period = 'evening';
+  else if (hour >= 21 || hour < 5) period = 'night';
+  const greetEl = document.getElementById('today-greeting');
+  if (greetEl) greetEl.textContent = `Good ${period}, Dr. Hanish.`;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+  document.getElementById('today-date-label').textContent = dateStr.toUpperCase();
+
+  const todayKey = getTodayKey(); // uses SESSION_TODAY_KEY — safe across midnight
+  if (!data.today[todayKey]) data.today[todayKey] = {
+    duty:'', mustForget:'', surgeries:[], followups:[], handover:[],
+    checkThesis:false, checkLogbook:false, checkAcademic:false, checkHandover:false,
+    brainDump:''
+  };
+  const t = data.today[todayKey];
+  // Migrate old entries without new fields
+  if (!t.handover) t.handover = [];
+  if (t.checkAcademic === undefined) t.checkAcademic = false;
+  if (t.checkHandover === undefined) t.checkHandover = false;
+
+  const mfi = document.getElementById('must-forget-input');
+  const fade = document.getElementById('must-forget-fade');
+
+  mfi.value = t.mustForget || '';
+
+  function autoGrow(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+    if (el.scrollHeight > el.clientHeight + 2) {
+      el.style.overflow = 'auto';
+      fade.style.opacity = '1';
+    } else {
+      el.style.overflow = 'hidden';
+      fade.style.opacity = '0';
+    }
+  }
+
+  setTimeout(() => autoGrow(mfi), 0);
+
+  mfi.oninput = e => {
+    t.mustForget = e.target.value;
+    save('today', data.today);
+    autoGrow(e.target);
+  };
+
+  ['regular','oncall','postcall'].forEach(dt => {
+    document.getElementById('duty-' + dt).className = 'duty-chip';
+  });
+  if (t.duty) document.getElementById('duty-' + t.duty).classList.add('active-' + t.duty);
+
+  renderSurgeries(t);
+  renderFollowups(t);
+  renderHandover(t);
+  renderStreak();
+  renderWeeklySummary();
+
+  // Restore postcall mode if today is post-call
+  applyPostcallMode(t.duty === 'postcall');
+
+  ['check-thesis','check-logbook','check-academic','check-handover'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const key = id.replace('check-','check').replace('-','');
+    // map id to data key
+    const keyMap = { 'check-thesis':'checkThesis','check-logbook':'checkLogbook','check-academic':'checkAcademic','check-handover':'checkHandover' };
+    el.className = 'checkbox-custom' + (t[keyMap[id]] ? ' checked' : '');
+  });
+
+  const bdt = document.getElementById('brain-dump-text');
+  bdt.value = t.brainDump || '';
+  bdt.oninput = e => { t.brainDump = e.target.value; save('today', data.today); };
+}
+
+function renderStreak() {
+  const row = document.getElementById('streak-row');
+  if (!row) return;
+  row.innerHTML = '';
+
+  // Count calls this month
+  const now = new Date();
+  const monthPrefix = now.toISOString().slice(0, 7); // "2026-02"
+  const callsThisMonth = Object.keys(data.callLog || {}).filter(k => k.startsWith(monthPrefix)).length;
+
+  // Consecutive call stretch — walk backwards from today
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 14; i++) {
+    const key = d.toISOString().slice(0, 10);
+    if (data.callLog[key]) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+
+  if (streak > 0) {
+    const s = document.createElement('span');
+    s.className = 'streak-chip oncall-streak';
+    s.textContent = streak === 1 ? 'on call today' : `${streak} calls in a row`;
+    row.appendChild(s);
+  }
+
+  if (callsThisMonth > 0) {
+    const m = document.createElement('span');
+    m.className = 'streak-chip calls-month';
+    m.textContent = `${callsThisMonth} calls this month`;
+    row.appendChild(m);
+  }
+}
+
+function renderThesisAlert() {
+  const slot = document.getElementById('thesis-alert-slot');
+  if (!slot) return;
+  slot.innerHTML = '';
+  // Find milestones within 30 days that aren't done
+  const upcoming = (data.milestones || [])
+    .filter(m => m.hardDeadline && m.status !== 'done')
+    .map(m => ({ ...m, days: daysUntil(m.hardDeadline) }))
+    .filter(m => m.days <= 30)
+    .sort((a, b) => a.days - b.days);
+  if (!upcoming.length) return;
+  // Show only the most urgent one
+  const m = upcoming[0];
+  const isUrgent = m.days <= 14;
+  const div = document.createElement('div');
+  div.className = 'thesis-alert' + (isUrgent ? ' urgent' : '');
+  div.onclick = () => showPage('thesis');
+  div.innerHTML = `
+    <div class="thesis-alert-label">${isUrgent ? '⚠ THESIS — URGENT' : '◈ THESIS DEADLINE APPROACHING'}</div>
+    <div class="thesis-alert-name">${m.name}</div>
+    <div class="thesis-alert-days">${m.days <= 0 ? 'Due today or overdue' : m.days === 1 ? 'Tomorrow' : (m.days + ' days left')} · tap to open thesis</div>
+  `;
+  slot.appendChild(div);
+}
+
+function renderWeeklySummary() {
+  const slot = document.getElementById('weekly-summary-slot');
+  if (!slot) return;
+  slot.innerHTML = '';
+
+  const now = new Date();
+  const isSunday = now.getDay() === 0;
+
+  // Compute last 7 days stats regardless, show only on Sundays
+  if (!isSunday) return;
+
+  let surgeries = 0, followupsDone = 0, thesisMoved = 0, callNights = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const day = data.today[key];
+    if (day) {
+      surgeries += (day.surgeries || []).filter(s => s.done).length;
+      followupsDone += (day.followups || []).filter(f => f.done).length;
+      if (day.checkThesis) thesisMoved++;
+    }
+    if (data.callLog[key]) callNights++;
+  }
+
+  const card = document.createElement('div');
+  card.className = 'weekly-summary';
+  card.innerHTML = `
+    <div class="weekly-summary-title">this week</div>
+    <div class="weekly-stats">
+      <div class="weekly-stat"><span class="wn">${surgeries}</span><span class="wl">surgeries</span></div>
+      <div class="weekly-stat"><span class="wn">${followupsDone}</span><span class="wl">followups</span></div>
+      <div class="weekly-stat"><span class="wn">${thesisMoved}</span><span class="wl">thesis days</span></div>
+      <div class="weekly-stat"><span class="wn">${callNights}</span><span class="wl">call nights</span></div>
+    </div>
+  `;
+  slot.appendChild(card);
+}
+// ── Session todayKey — cached once at load, never re-computed mid-session ──
+// Prevents date-rollover bug where midnight flip breaks getToday() during a shift
+const SESSION_TODAY_KEY = new Date().toISOString().slice(0, 10);
+
+function getTodayKey() { return SESSION_TODAY_KEY; }
+function getToday() { return data.today[getTodayKey()]; }
+
+function setDuty(type) {
+  ['regular','oncall','postcall'].forEach(t => {
+    document.getElementById('duty-' + t).className = 'duty-chip';
+  });
+  document.getElementById('duty-' + type).classList.add('active-' + type);
+  const t = getToday();
+  if (t) { t.duty = type; save('today', data.today); }
+
+  // Record call nights in call log
+  const todayKey = getTodayKey();
+  if (!data.callLog) data.callLog = {};
+  if (type === 'oncall') {
+    data.callLog[todayKey] = true;
+  } else if (type === 'regular' || type === 'postcall') {
+    // Don't erase — postcall means yesterday was a call night
+    // Only erase if explicitly set to regular and it was already marked
+    if (type === 'regular') delete data.callLog[todayKey];
+  }
+  save('callLog', data.callLog);
+
+  // Postcall mode
+  applyPostcallMode(type === 'postcall');
+  renderStreak();
+}
+
+function applyPostcallMode(on) {
+  document.body.classList.toggle('postcall-mode', on);
+  // On postcall: auto-collapse all non-essential cards, keep must-forget open
+  if (on) {
+    document.querySelectorAll('.section-card-body').forEach(b => {
+      if (b.id !== 'handover-body') { b.classList.remove('open'); b.previousElementSibling?.classList.remove('open'); }
+    });
+  }
+}
+
+function toggleCheck(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('checked');
+  const t = getToday();
+  if (!t) return;
+  const keyMap = {
+    'check-thesis':'checkThesis','check-logbook':'checkLogbook',
+    'check-academic':'checkAcademic','check-handover':'checkHandover'
+  };
+  if (keyMap[id] !== undefined) t[keyMap[id]] = el.classList.contains('checked');
+  save('today', data.today);
+}
+
+function renderSurgeries(t) {
+  const list = document.getElementById('surgery-list');
+  list.innerHTML = '';
+  (t.surgeries || []).forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'input-row';
+
+    const cb = document.createElement('div');
+    cb.className = 'checkbox-custom' + (s.done ? ' checked' : '');
+    cb.onclick = () => toggleSurgery(i);
+
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = s.name || '';
+    inp.placeholder = 'Surgery name...';
+    inp.oninput = e => { t.surgeries[i].name = e.target.value; save('today', data.today); };
+
+    const del = document.createElement('span');
+    del.textContent = '×';
+    del.style.cssText = 'cursor:pointer;color:var(--muted);font-size:18px;padding:0 4px';
+    del.onclick = () => removeSurgery(i);
+
+    row.appendChild(cb); row.appendChild(inp); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+
+function addSurgery() {
+  const t = getToday();
+  t.surgeries.push({ name:'', done:false });
+  save('today', data.today);
+  renderSurgeries(t);
+  document.querySelector('#surgery-list .input-row:last-child input')?.focus();
+}
+function removeSurgery(i) {
+  const t = getToday(); t.surgeries.splice(i,1); save('today', data.today); renderSurgeries(t);
+}
+// updateSurgery inlined into renderSurgeries oninput
+function toggleSurgery(i) {
+  const t = getToday(); t.surgeries[i].done = !t.surgeries[i].done; save('today', data.today); renderSurgeries(t);
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function renderHandover(t) {
+  const list = document.getElementById('handover-list');
+  if (!list) return;
+  list.innerHTML = '';
+  (t.handover || []).forEach((h, i) => {
+    const item = document.createElement('div');
+    item.className = 'handover-item';
+
+    // Urgency dot — cycles normal→watch→critical on tap
+    const dot = document.createElement('div');
+    const urgencies = ['normal','watch','critical'];
+    dot.className = 'handover-urgency ' + (h.urgency || 'normal');
+    dot.title = 'Tap to cycle urgency';
+    dot.onclick = () => {
+      const cur = urgencies.indexOf(h.urgency || 'normal');
+      h.urgency = urgencies[(cur + 1) % urgencies.length];
+      save('today', data.today);
+      dot.className = 'handover-urgency ' + h.urgency;
+    };
+
+    const inp = document.createElement('textarea');
+    inp.className = 'handover-text-input';
+    inp.value = h.text || '';
+    inp.placeholder = 'Patient / pending action / critical note...';
+    inp.rows = 1;
+    inp.oninput = e => {
+      h.text = e.target.value;
+      save('today', data.today);
+      // auto-grow
+      e.target.style.height = 'auto';
+      e.target.style.height = e.target.scrollHeight + 'px';
+    };
+    // Auto-grow on load
+    setTimeout(() => {
+      if (inp.scrollHeight > 22) { inp.style.height = 'auto'; inp.style.height = inp.scrollHeight + 'px'; }
+    }, 0);
+
+    const del = document.createElement('button');
+    del.className = 'handover-del';
+    del.textContent = '×';
+    del.onclick = () => { t.handover.splice(i, 1); save('today', data.today); renderHandover(t); };
+
+    item.appendChild(dot); item.appendChild(inp); item.appendChild(del);
+    list.appendChild(item);
+  });
+}
+
+function addHandover() {
+  const t = getToday();
+  if (!t.handover) t.handover = [];
+  t.handover.push({ text: '', urgency: 'normal' });
+  save('today', data.today);
+  renderHandover(t);
+  const list = document.getElementById('handover-list');
+  const inputs = list?.querySelectorAll('.handover-text-input');
+  if (inputs?.length) inputs[inputs.length - 1].focus();
+}
+
+function renderFollowups(t) {
+  const list = document.getElementById('followup-list');
+  list.innerHTML = '';
+  (t.followups || []).forEach((f, i) => {
+    const row = document.createElement('div');
+    row.className = 'input-row';
+
+    const cb = document.createElement('div');
+    cb.className = 'checkbox-custom' + (f.done ? ' checked' : '');
+    cb.onclick = () => toggleFollowup(i);
+
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = f.name || '';
+    inp.placeholder = 'Patient / action...';
+    inp.oninput = e => { t.followups[i].name = e.target.value; save('today', data.today); };
+
+    const del = document.createElement('span');
+    del.textContent = '\u00d7';
+    del.style.cssText = 'cursor:pointer;color:var(--muted);font-size:18px;padding:0 4px';
+    del.onclick = () => removeFollowup(i);
+
+    row.appendChild(cb); row.appendChild(inp); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+function addFollowup() {
+  const t = getToday();
+  t.followups.push({ name:'', done:false });
+  save('today', data.today);
+  renderFollowups(t);
+  document.querySelector('#followup-list .input-row:last-child input')?.focus();
+}
+function removeFollowup(i) {
+  const t = getToday(); t.followups.splice(i,1); save('today', data.today); renderFollowups(t);
+}
+// updateFollowup inlined into renderFollowups oninput
+function toggleFollowup(i) {
+  const t = getToday(); t.followups[i].done = !t.followups[i].done; save('today', data.today); renderFollowups(t);
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  header.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+function saveDay() {
+  save('today', data.today);
+
+  const mfi = document.getElementById('must-forget-input');
+  const fade = document.getElementById('must-forget-fade');
+
+  mfi.blur();
+  mfi.style.height = 'auto';
+  if (fade) fade.style.opacity = '0';
+
+  showToast('✓ Day captured');
+}
+
+// ══════════════════════════════════════════
+// THESIS PAGE
+// ══════════════════════════════════════════
+
+let thesisFilter = 'all';
+
+function initThesis() {
+  const hasDeadlines = data.milestones.some(m => m.hardDeadline);
+  document.getElementById('thesis-setup-banner').style.display = hasDeadlines ? 'none' : 'block';
+  renderMilestones();
+  renderTimestamp('thesis-timestamp', 'thesis');
+}
+
+function setThesisFilter(f) {
+  thesisFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('filter-' + f).classList.add('active');
+  renderMilestones();
+}
+
+function renderMilestones() {
+  const list = document.getElementById('milestone-list');
+  list.innerHTML = '';
+
+  data.milestones.forEach(m => {
+    // Apply filter
+    if (thesisFilter === 'active' && (m.status === 'done' || m.status === 'notstarted')) return;
+    if (thesisFilter === 'atrisk' && m.status !== 'atrisk') return;
+    if (thesisFilter === 'done' && m.status !== 'done') return;
+
+    list.appendChild(buildMilestoneEl(m));
+  });
+}
+
+function buildMilestoneEl(m) {
+  // Ensure todos array exists
+  if (!m.todos) m.todos = [];
+
+  const el = document.createElement('div');
+  el.className = `milestone-row status-${m.status}${m.status === 'done' ? ' collapsed-done' : ''}`;
+  el.id = 'ms-' + m.id;
+
+  // ── HEADER (always visible) ──
+  const header = document.createElement('div');
+  header.className = 'ms-header';
+  header.onclick = () => toggleMilestone(m.id);
+
+  const daysLeft = daysUntil(m.hardDeadline);
+  const daysClass = daysLeft <= 14 ? 'days-urgent' : daysLeft <= 30 ? 'days-warn' : 'days-ok';
+  const daysText = m.hardDeadline && m.status !== 'done' ? `${daysLeft}d left` : (m.status === 'done' ? '✓ done' : 'no deadline');
+
+  // Todo progress dots (max 8, then "+N more")
+  const totalTodos = m.todos.length;
+  const doneTodos = m.todos.filter(t => t.done).length;
+  let dotsHTML = '';
+  if (totalTodos > 0) {
+    const showDots = Math.min(totalTodos, 8);
+    let dots = '';
+    for (let i = 0; i < showDots; i++) {
+      dots += `<span class="todo-dot ${i < doneTodos ? 'done' : ''}"></span>`;
+    }
+    if (totalTodos > 8) dots += `<span class="todo-dot more">+${totalTodos - 8}</span>`;
+    dotsHTML = `<span class="todo-progress-dots">${dots}</span>`;
+  }
+
+  const statusEmoji = { notstarted:'🔴', inprogress:'🟡', done:'🟢', atrisk:'⚠️' }[m.status] || '🔴';
+
+  const headerLeft = document.createElement('div');
+  headerLeft.className = 'ms-header-left';
+  headerLeft.innerHTML = `
+    <div class="ms-name">${m.name}</div>
+    <div class="ms-meta">
+      <span>${statusEmoji} ${m.status === 'notstarted' ? 'Not started' : m.status === 'inprogress' ? 'In progress' : m.status === 'done' ? 'Done' : 'At risk'}</span>
+      ${m.hardDeadline ? `<span class="days-left-badge ${daysClass}">${daysText}</span>` : ''}
+      ${dotsHTML}
+    </div>
+  `;
+
+  const chevron = document.createElement('span');
+  chevron.className = 'ms-chevron' + (m._open ? ' open' : '');
+  chevron.textContent = '▾';
+
+  header.appendChild(headerLeft);
+  header.appendChild(chevron);
+  el.appendChild(header);
+
+  // ── BODY (collapsible) ──
+  const body = document.createElement('div');
+  body.className = 'ms-body' + (m._open ? ' open' : '');
+
+  // Dates row
+  const datesDiv = document.createElement('div');
+  datesDiv.className = 'milestone-dates';
+
+  const deadlineField = document.createElement('div');
+  deadlineField.className = 'date-field';
+  deadlineField.innerHTML = '<label>HARD DEADLINE</label>';
+  const deadlineInput = document.createElement('input');
+  deadlineInput.type = 'date';
+  deadlineInput.value = m.hardDeadline || '';
+  deadlineInput.style.colorScheme = 'dark';
+  deadlineInput.onchange = e => {
+    m.hardDeadline = e.target.value;
+    save('milestones', data.milestones);
+    // Update target date display in-place
+    const targetInput = el.querySelector('.target-date-input');
+    if (targetInput) targetInput.value = calcTarget(e.target.value);
+    // Update header badge in-place
+    updateMilestoneHeader(m);
+    document.getElementById('thesis-setup-banner').style.display =
+      data.milestones.some(x => x.hardDeadline) ? 'none' : 'block';
+  };
+  deadlineField.appendChild(deadlineInput);
+
+  const targetField = document.createElement('div');
+  targetField.className = 'date-field';
+  targetField.innerHTML = '<label>YOUR TARGET (−14d)</label>';
+  const targetInput = document.createElement('input');
+  targetInput.type = 'date';
+  targetInput.value = calcTarget(m.hardDeadline);
+  targetInput.readOnly = true;
+  targetInput.className = 'target-date-input';
+  targetInput.style.cssText = 'opacity:0.5;cursor:default;color-scheme:dark';
+  targetField.appendChild(targetInput);
+
+  datesDiv.appendChild(deadlineField);
+  datesDiv.appendChild(targetField);
+  body.appendChild(datesDiv);
+
+  // Status row
+  const statusRow = document.createElement('div');
+  statusRow.className = 'ms-status-row';
+
+  const sel = document.createElement('select');
+  sel.className = 'status-select';
+  [['notstarted','🔴 Not Started'],['inprogress','🟡 In Progress'],['done','🟢 Done'],['atrisk','⚠️ At Risk']].forEach(([val, label]) => {
+    const opt = document.createElement('option');
+    opt.value = val; opt.textContent = label;
+    if (m.status === val) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  sel.onchange = e => {
+    m.status = e.target.value;
+    save('milestones', data.milestones);
+    // Surgical update: just update classes and header
+    el.className = `milestone-row status-${m.status}${m.status === 'done' ? ' collapsed-done' : ''}`;
+    updateMilestoneHeader(m);
+    // If filter is active, hide this row if it no longer matches
+    if (thesisFilter !== 'all') applyFilterToEl(el, m);
+  };
+  statusRow.appendChild(sel);
+
+  // Days badge (will be updated in-place)
+  const badge = document.createElement('span');
+  badge.className = `days-left-badge ms-days-badge ${daysClass}`;
+  badge.textContent = m.hardDeadline && m.status !== 'done' ? `${daysLeft}d left` : '';
+  if (m.hardDeadline && m.status !== 'done') statusRow.appendChild(badge);
+
+  body.appendChild(statusRow);
+
+  // ── TODO LIST ──
+  const todoLabel = document.createElement('div');
+  todoLabel.className = 'ms-todo-label';
+  todoLabel.textContent = 'TASKS';
+  body.appendChild(todoLabel);
+
+  const todoList = document.createElement('div');
+  todoList.className = 'ms-todo-list';
+  todoList.id = 'todos-' + m.id;
+  body.appendChild(todoList);
+
+  // Render todos into list
+  renderTodosInto(m, todoList);
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'ms-add-todo';
+  addBtn.textContent = '+ ADD TASK';
+  addBtn.onclick = () => addTodo(m.id);
+  body.appendChild(addBtn);
+
+  el.appendChild(body);
+  return el;
+}
+
+function renderTodosInto(m, container) {
+  container.innerHTML = '';
+  (m.todos || []).forEach((todo, i) => {
+    const item = document.createElement('div');
+    item.className = 'ms-todo-item' + (todo.done ? ' done-item' : '');
+    item.id = `todo-${m.id}-${i}`;
+
+    const cb = document.createElement('div');
+    cb.className = 'todo-cb' + (todo.done ? ' checked' : '');
+    cb.onclick = () => toggleTodo(m.id, i);
+
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'todo-text';
+    inp.value = todo.text || '';
+    inp.placeholder = 'Task description...';
+    // KEY FIX: oninput updates data WITHOUT re-rendering anything
+    inp.oninput = e => {
+      m.todos[i].text = e.target.value;
+      save('milestones', data.milestones);
+      // update header dots without destroying focus
+      updateMilestoneHeader(m);
+    };
+
+    const del = document.createElement('button');
+    del.className = 'todo-del';
+    del.textContent = '×';
+    del.onclick = () => deleteTodo(m.id, i);
+
+    item.appendChild(cb);
+    item.appendChild(inp);
+    item.appendChild(del);
+    container.appendChild(item);
+  });
+}
+
+function updateMilestoneHeader(m) {
+  // Surgically update only the header content — never touches the body or inputs
+  const el = document.getElementById('ms-' + m.id);
+  if (!el) return;
+  const headerLeft = el.querySelector('.ms-header-left');
+  if (!headerLeft) return;
+
+  const daysLeft = daysUntil(m.hardDeadline);
+  const daysClass = daysLeft <= 14 ? 'days-urgent' : daysLeft <= 30 ? 'days-warn' : 'days-ok';
+  const statusEmoji = { notstarted:'🔴', inprogress:'🟡', done:'🟢', atrisk:'⚠️' }[m.status] || '🔴';
+  const statusLabel = { notstarted:'Not started', inprogress:'In progress', done:'Done', atrisk:'At risk' }[m.status] || '';
+
+  const totalTodos = (m.todos || []).length;
+  const doneTodos = (m.todos || []).filter(t => t.done).length;
+  let dotsHTML = '';
+  if (totalTodos > 0) {
+    const showDots = Math.min(totalTodos, 8);
+    let dots = '';
+    for (let i = 0; i < showDots; i++) {
+      dots += `<span class="todo-dot ${i < doneTodos ? 'done' : ''}"></span>`;
+    }
+    if (totalTodos > 8) dots += `<span class="todo-dot more">+${totalTodos - 8}</span>`;
+    dotsHTML = `<span class="todo-progress-dots">${dots}</span>`;
+  }
+
+  headerLeft.innerHTML = `
+    <div class="ms-name">${m.name}</div>
+    <div class="ms-meta">
+      <span>${statusEmoji} ${statusLabel}</span>
+      ${m.hardDeadline && m.status !== 'done' ? `<span class="days-left-badge ${daysClass}">${daysLeft}d left</span>` : ''}
+      ${dotsHTML}
+    </div>
+  `;
+}
+
+function applyFilterToEl(el, m) {
+  let visible = true;
+  if (thesisFilter === 'active' && (m.status === 'done' || m.status === 'notstarted')) visible = false;
+  if (thesisFilter === 'atrisk' && m.status !== 'atrisk') visible = false;
+  if (thesisFilter === 'done' && m.status !== 'done') visible = false;
+  el.style.display = visible ? '' : 'none';
+}
+
+function toggleMilestone(id) {
+  const m = data.milestones.find(x => x.id === id);
+  if (!m) return;
+  m._open = !m._open;
+  save('milestones', data.milestones);
+  const el = document.getElementById('ms-' + id);
+  if (!el) return;
+  el.querySelector('.ms-body').classList.toggle('open', m._open);
+  el.querySelector('.ms-chevron').classList.toggle('open', m._open);
+}
+
+function addTodo(milestoneId) {
+  const m = data.milestones.find(x => x.id === milestoneId);
+  if (!m) return;
+  if (!m.todos) m.todos = [];
+  m.todos.push({ text: '', done: false });
+  save('milestones', data.milestones);
+  // Re-render only the todo list inside this milestone — not the full milestone list
+  const container = document.getElementById('todos-' + milestoneId);
+  if (container) {
+    renderTodosInto(m, container);
+    // Focus the new input
+    const inputs = container.querySelectorAll('.todo-text');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }
+  updateMilestoneHeader(m);
+}
+
+function deleteTodo(milestoneId, idx) {
+  const m = data.milestones.find(x => x.id === milestoneId);
+  if (!m || !m.todos) return;
+  m.todos.splice(idx, 1);
+  save('milestones', data.milestones);
+  const container = document.getElementById('todos-' + milestoneId);
+  if (container) renderTodosInto(m, container);
+  updateMilestoneHeader(m);
+}
+
+function toggleTodo(milestoneId, idx) {
+  const m = data.milestones.find(x => x.id === milestoneId);
+  if (!m || !m.todos) return;
+  m.todos[idx].done = !m.todos[idx].done;
+  save('milestones', data.milestones);
+  // Surgical: just update this one todo item's classes
+  const item = document.getElementById(`todo-${milestoneId}-${idx}`);
+  if (item) {
+    item.classList.toggle('done-item', m.todos[idx].done);
+    item.querySelector('.todo-cb').classList.toggle('checked', m.todos[idx].done);
+  }
+  updateMilestoneHeader(m);
+}
+
+function updateMilestone(id, field, value) {
+  const m = data.milestones.find(x => x.id === id);
+  if (!m) return;
+  m[field] = value;
+  save('milestones', data.milestones);
+  touchTimestamp('thesis');
+  renderTimestamp('thesis-timestamp', 'thesis');
+  updateMilestoneHeader(m);
+  document.getElementById('thesis-setup-banner').style.display =
+    data.milestones.some(x => x.hardDeadline) ? 'none' : 'block';
+}
+
+function daysUntil(dateStr) {
+  if (!dateStr) return 999;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(dateStr);
+  target.setHours(0, 0, 0, 0);
+  return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+}
+
+function calcTarget(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() - 14);
+  return d.toISOString().slice(0,10);
+}
+
+// ══════════════════════════════════════════
+// LOGBOOK PAGE
+// ══════════════════════════════════════════
+
+function initLogbook() {
+  renderLogbook();
+  renderTimestamp('logbook-timestamp', 'logbook');
+}
+
+function renderLogbook() {
+  const list = document.getElementById('logbook-list');
+  list.innerHTML = '';
+
+  let totalDone = 0, totalTarget = 0;
+
+  data.logbook.forEach(row => {
+    totalDone += row.done;
+    totalTarget += row.target;
+
+    const pct = row.target > 0 ? Math.min(100, Math.round(row.done / row.target * 100)) : 0;
+    const remaining = Math.max(0, row.target - row.done);
+    const statusClass = row.done >= row.target ? 'days-ok' : remaining <= 5 ? 'days-urgent' : 'days-warn';
+    const statusLabel = row.done >= row.target ? '✅ COMPLETE' : `${remaining} LEFT`;
+    const fillClass = row.done >= row.target ? '' : remaining <= 5 ? 'urgent' : pct >= 60 ? '' : 'warn';
+
+    const el = document.createElement('div');
+    el.className = 'logbook-row';
+    el.innerHTML = `
+      <div class="logrow-header">
+        <div class="logrow-name">${row.name}</div>
+        <span class="logrow-status ${statusClass}">${statusLabel}</span>
+      </div>
+      <div class="logrow-counters">
+        <div class="counter-box">
+          <label>DONE</label>
+          <div class="counter-ctrl">
+            <button class="counter-btn" onclick="adjustLog('${row.id}', -1)">−</button>
+            <input class="counter-val" type="number" value="${row.done}" min="0" onchange="setLog('${row.id}', this.value)">
+            <div style="position:relative;display:flex;">
+              <button class="counter-btn"
+                onclick="adjustLog('${row.id}', 1)"
+                oncontextmenu="showBulkAdd(event,'${row.id}')"
+                data-longpress="${row.id}"
+                id="plusbtn-${row.id}">+</button>
+            </div>
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:18px;color:var(--muted);padding-top:16px">/</div>
+        <div class="counter-box">
+          <label>TARGET</label>
+          <div class="counter-ctrl">
+            <input class="counter-val" style="width:50px;border-left:none;border-right:none" type="number" value="${row.target}" min="0" onchange="setTarget('${row.id}', this.value)">
+          </div>
+        </div>
+        <div style="margin-left:auto;text-align:right;padding-top:16px">
+          <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:${pct>=100?'var(--accent2)':pct>=50?'var(--warn)':'var(--accent)'}">${pct}%</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--muted)">COMPLETE</div>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${fillClass}" style="width:${pct}%"></div>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  document.getElementById('total-done').textContent = totalDone;
+  document.getElementById('total-target').textContent = totalTarget;
+  document.getElementById('total-remaining').textContent = Math.max(0, totalTarget - totalDone);
+}
+
+function adjustLog(id, delta) {
+  const row = data.logbook.find(r => r.id === id);
+  if (!row) return;
+  row.done = Math.max(0, row.done + delta);
+  save('logbook', data.logbook);
+  touchTimestamp('logbook');
+  renderLogbook();
+  renderTimestamp('logbook-timestamp', 'logbook');
+  if (navigator.vibrate) navigator.vibrate(8);
+}
+function setLog(id, val) {
+  const row = data.logbook.find(r => r.id === id);
+  if (!row) return;
+  row.done = Math.max(0, parseInt(val) || 0);
+  save('logbook', data.logbook);
+  touchTimestamp('logbook');
+  renderLogbook();
+  renderTimestamp('logbook-timestamp', 'logbook');
+}
+function setTarget(id, val) {
+  const row = data.logbook.find(r => r.id === id);
+  if (!row) return;
+  row.target = Math.max(0, parseInt(val) || 0);
+  save('logbook', data.logbook);
+  renderLogbook();
+}
+
+// ── Bulk Add popup (long-press + on logbook) ──
+let _bulkTimer = null;
+
+function showBulkAdd(e, id) {
+  e.preventDefault();
+  _openBulkPopup(id);
+}
+
+function _openBulkPopup(id) {
+  // Close any existing
+  document.querySelectorAll('.bulk-popup').forEach(p => p.remove());
+  const btn = document.getElementById('plusbtn-' + id);
+  if (!btn) return;
+  const popup = document.createElement('div');
+  popup.className = 'bulk-popup';
+  [2,3,4,5].forEach(n => {
+    const b = document.createElement('button');
+    b.textContent = '+' + n;
+    b.onclick = (e) => {
+      e.stopPropagation();
+      adjustLog(id, n);
+      popup.remove();
+    };
+    popup.appendChild(b);
+  });
+  btn.parentElement.appendChild(popup);
+  // Close on outside tap
+  setTimeout(() => document.addEventListener('click', () => popup.remove(), { once: true }), 10);
+  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+}
+
+// Long-press detection for touch devices
+document.addEventListener('touchstart', e => {
+  const btn = e.target.closest('[data-longpress]');
+  if (!btn) return;
+  const id = btn.dataset.longpress;
+  _bulkTimer = setTimeout(() => _openBulkPopup(id), 500);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (_bulkTimer) { clearTimeout(_bulkTimer); _bulkTimer = null; }
+}, { passive: true });
+
+document.addEventListener('touchmove', () => {
+  if (_bulkTimer) { clearTimeout(_bulkTimer); _bulkTimer = null; }
+}, { passive: true });
+
+// ── On-Call Log ──
+function renderCallLog() {
+  const grid = document.getElementById('call-log-grid');
+  const label = document.getElementById('call-month-label');
+  const badge = document.getElementById('call-total-badge');
+  if (!grid) return;
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const monthPrefix = now.toISOString().slice(0, 7);
+  const todayKey = now.toISOString().slice(0, 10);
+
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (label) label.textContent = monthNames[month] + ' ' + year;
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const callCount = Object.keys(data.callLog || {}).filter(k => k.startsWith(monthPrefix)).length;
+  if (badge) badge.textContent = callCount + (callCount === 1 ? ' call' : ' calls');
+
+  grid.innerHTML = '';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isFuture = dateKey > todayKey;
+    const isToday = dateKey === todayKey;
+    const isCall = !!(data.callLog || {})[dateKey];
+
+    const cell = document.createElement('div');
+    cell.className = 'call-day' + (isCall ? ' is-call' : '') + (isToday ? ' is-today' : '') + (isFuture ? ' future' : '');
+    cell.textContent = d;
+    cell.title = isCall ? `${dateKey}: on call` : dateKey;
+    if (!isFuture) {
+      cell.onclick = () => {
+        if (!data.callLog) data.callLog = {};
+        if (data.callLog[dateKey]) delete data.callLog[dateKey];
+        else data.callLog[dateKey] = true;
+        save('callLog', data.callLog);
+        renderCallLog();
+        renderStreak();
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+// ══════════════════════════════════════════
+// ACADEMIC PAGE
+// ══════════════════════════════════════════
+
+function initAcademic() {
+  renderExamCountdown();
+  renderAcademicReqs();
+  renderConferences();
+  renderLeave();
+  renderPublications();
+  renderCallLog();
+}
+
+// ── Exam Countdown ──
+function setExamDate(val) {
+  data.examDate = val;
+  save('examDate', val);
+  renderExamCountdown();
+}
+
+function renderExamCountdown() {
+  const inp = document.getElementById('exam-date-input');
+  const daysEl = document.getElementById('exam-days-display');
+  const dateEl = document.getElementById('exam-date-display');
+  if (!inp || !daysEl) return;
+  inp.value = data.examDate || '';
+  if (!data.examDate) {
+    daysEl.textContent = '— days';
+    daysEl.className = 'exam-days';
+    dateEl.textContent = 'Set your exam date →';
+    return;
+  }
+  const d = daysUntil(data.examDate);
+  daysEl.textContent = d + (d === 1 ? ' day' : ' days');
+  daysEl.className = 'exam-days' + (d <= 30 ? ' urgent' : d <= 90 ? ' warn' : '');
+  const fmt = new Date(data.examDate).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+  dateEl.textContent = fmt;
+}
+
+// ── Academic Requirements ──
+function renderAcademicReqs() {
+  const list = document.getElementById('academic-req-list');
+  if (!list) return;
+  list.innerHTML = '';
+  data.academicReqs.forEach(req => {
+    const pct = req.target > 0 ? Math.min(100, Math.round(req.done / req.target * 100)) : 0;
+    const remaining = Math.max(0, req.target - req.done);
+    const fillClass = pct >= 100 ? '' : remaining <= 2 ? 'urgent' : pct < 50 ? 'warn' : '';
+
+    const row = document.createElement('div');
+    row.className = 'acad-req-row';
+    row.id = 'acad-' + req.id;
+
+    const left = document.createElement('div');
+    left.className = 'acad-req-left';
+    left.innerHTML = `
+      <div class="acad-req-name">${req.name}</div>
+      <div class="acad-req-sub">${req.note} · ${req.done}/${req.target} ${req.unit}</div>
+      <div class="acad-progress-bar"><div class="acad-progress-fill ${fillClass}" style="width:${pct}%"></div></div>
+    `;
+
+    const right = document.createElement('div');
+    right.className = 'acad-req-right';
+
+    const pctLabel = document.createElement('div');
+    pctLabel.className = 'acad-pct';
+    pctLabel.style.color = pct >= 100 ? 'var(--accent2)' : pct >= 50 ? 'var(--warn)' : 'var(--accent)';
+    pctLabel.textContent = pct + '%';
+
+    const ctrl = document.createElement('div');
+    ctrl.className = 'acad-counter-ctrl';
+
+    const minusBtn = document.createElement('button');
+    minusBtn.className = 'acad-counter-btn';
+    minusBtn.textContent = '−';
+    minusBtn.onclick = () => adjustAcadReq(req.id, -1);
+
+    const valInp = document.createElement('input');
+    valInp.type = 'number';
+    valInp.className = 'acad-counter-val';
+    valInp.value = req.done;
+    valInp.min = 0;
+    valInp.onchange = e => setAcadReq(req.id, e.target.value);
+
+    const plusBtn = document.createElement('button');
+    plusBtn.className = 'acad-counter-btn';
+    plusBtn.textContent = '+';
+    plusBtn.onclick = () => adjustAcadReq(req.id, 1);
+
+    ctrl.appendChild(minusBtn); ctrl.appendChild(valInp); ctrl.appendChild(plusBtn);
+
+    const targetLabel = document.createElement('div');
+    targetLabel.className = 'acad-target-label';
+    targetLabel.textContent = '/ ' + req.target;
+
+    right.appendChild(pctLabel);
+    right.appendChild(ctrl);
+    right.appendChild(targetLabel);
+
+    row.appendChild(left);
+    row.appendChild(right);
+    list.appendChild(row);
+  });
+}
+
+function adjustAcadReq(id, delta) {
+  const req = data.academicReqs.find(r => r.id === id);
+  if (!req) return;
+  req.done = Math.max(0, req.done + delta);
+  save('academicReqs', data.academicReqs);
+  renderAcademicReqs();
+}
+
+function setAcadReq(id, val) {
+  const req = data.academicReqs.find(r => r.id === id);
+  if (!req) return;
+  req.done = Math.max(0, parseInt(val) || 0);
+  save('academicReqs', data.academicReqs);
+  renderAcademicReqs();
+}
+
+// ── Conferences ──
+function renderConferences() {
+  const list = document.getElementById('conference-list');
+  if (!list) return;
+  list.innerHTML = '';
+  data.conferences.forEach((conf, i) => {
+    const row = document.createElement('div');
+    row.className = 'conf-row';
+
+    const top = document.createElement('div');
+    top.className = 'conf-row-top';
+
+    const nameInp = document.createElement('input');
+    nameInp.type = 'text';
+    nameInp.className = 'conf-name-input';
+    nameInp.value = conf.name || '';
+    nameInp.placeholder = 'Conference / workshop name...';
+    nameInp.oninput = e => { conf.name = e.target.value; save('conferences', data.conferences); };
+
+    const del = document.createElement('button');
+    del.className = 'conf-del';
+    del.textContent = '×';
+    del.onclick = () => { data.conferences.splice(i, 1); save('conferences', data.conferences); renderConferences(); };
+
+    top.appendChild(nameInp); top.appendChild(del);
+
+    const meta = document.createElement('div');
+    meta.className = 'conf-row-meta';
+
+    const dateInp = document.createElement('input');
+    dateInp.type = 'date';
+    dateInp.className = 'conf-date-input';
+    dateInp.value = conf.date || '';
+    dateInp.style.colorScheme = 'dark';
+    dateInp.onchange = e => { conf.date = e.target.value; save('conferences', data.conferences); };
+
+    const typeSel = document.createElement('select');
+    typeSel.className = 'conf-type-select';
+    [['conference','Conference'],['cme','CME'],['workshop','Workshop'],['seminar','Seminar'],['webinar','Webinar']].forEach(([v,l]) => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = l;
+      if (conf.type === v) o.selected = true;
+      typeSel.appendChild(o);
+    });
+    typeSel.onchange = e => { conf.type = e.target.value; save('conferences', data.conferences); };
+
+    const certBtn = document.createElement('button');
+    certBtn.className = 'conf-cert-chip' + (conf.cert ? ' got' : '');
+    certBtn.textContent = conf.cert ? '✓ Cert received' : 'Cert pending';
+    certBtn.onclick = () => {
+      conf.cert = !conf.cert;
+      save('conferences', data.conferences);
+      certBtn.className = 'conf-cert-chip' + (conf.cert ? ' got' : '');
+      certBtn.textContent = conf.cert ? '✓ Cert received' : 'Cert pending';
+    };
+
+    meta.appendChild(dateInp); meta.appendChild(typeSel); meta.appendChild(certBtn);
+    row.appendChild(top); row.appendChild(meta);
+    list.appendChild(row);
+  });
+}
+
+function addConference() {
+  data.conferences.push({ name:'', date:'', type:'conference', cert:false });
+  save('conferences', data.conferences);
+  renderConferences();
+  const inputs = document.querySelectorAll('.conf-name-input');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+// ── Leave ──
+function renderLeave() {
+  const grid = document.getElementById('leave-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  data.leave.forEach(lv => {
+    const remaining = Math.max(0, lv.total - lv.used);
+    const card = document.createElement('div');
+    card.className = 'leave-card';
+    card.innerHTML = `
+      <div class="leave-card-title">${lv.name}</div>
+      <div class="leave-card-nums">
+        <span class="leave-card-used">${lv.used}</span>
+        <span class="leave-card-total">/ ${lv.total} used</span>
+      </div>
+      <div class="leave-card-remaining">${remaining} remaining</div>
+    `;
+
+    const ctrl = document.createElement('div');
+    ctrl.className = 'leave-ctrl';
+
+    const minusBtn = document.createElement('button');
+    minusBtn.className = 'leave-btn';
+    minusBtn.textContent = '−';
+    minusBtn.onclick = () => { lv.used = Math.max(0, lv.used - 1); save('leave', data.leave); renderLeave(); };
+
+    const plusBtn = document.createElement('button');
+    plusBtn.className = 'leave-btn';
+    plusBtn.textContent = '+';
+    plusBtn.onclick = () => { lv.used = lv.used + 1; save('leave', data.leave); renderLeave(); };
+
+    const totalLabel = document.createElement('span');
+    totalLabel.style.cssText = 'font-family:var(--mono);font-size:9px;color:var(--muted);margin-left:4px;';
+    totalLabel.textContent = 'Total:';
+
+    const totalInp = document.createElement('input');
+    totalInp.type = 'number';
+    totalInp.value = lv.total;
+    totalInp.min = 0;
+    totalInp.style.cssText = 'width:36px;background:var(--s2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:11px;text-align:center;padding:2px 4px;outline:none;';
+    totalInp.onchange = e => { lv.total = Math.max(0, parseInt(e.target.value) || 0); save('leave', data.leave); renderLeave(); };
+
+    ctrl.appendChild(minusBtn);
+    ctrl.appendChild(plusBtn);
+    ctrl.appendChild(totalLabel);
+    ctrl.appendChild(totalInp);
+    card.appendChild(ctrl);
+    grid.appendChild(card);
+  });
+}
+
+// ── Publications ──
+function renderPublications() {
+  const list = document.getElementById('pubs-list');
+  if (!list) return;
+  list.innerHTML = '';
+  data.publications.forEach((pub, i) => {
+    const row = document.createElement('div');
+    row.className = 'pub-row ' + (pub.status || '');
+
+    const top = document.createElement('div');
+    top.className = 'pub-row-top';
+
+    const titleInp = document.createElement('input');
+    titleInp.type = 'text';
+    titleInp.className = 'pub-title-input';
+    titleInp.value = pub.title || '';
+    titleInp.placeholder = 'Title / topic...';
+    titleInp.oninput = e => { pub.title = e.target.value; save('publications', data.publications); };
+
+    const del = document.createElement('button');
+    del.className = 'pub-del';
+    del.textContent = '×';
+    del.onclick = () => { data.publications.splice(i, 1); save('publications', data.publications); renderPublications(); };
+
+    top.appendChild(titleInp); top.appendChild(del);
+
+    const meta = document.createElement('div');
+    meta.className = 'pub-row-meta';
+
+    const typeSel = document.createElement('select');
+    typeSel.className = 'pub-type-select';
+    [['paper','Journal Paper'],['casereport','Case Report'],['poster','Poster'],['oral','Oral Presentation'],['chapter','Book Chapter']].forEach(([v,l]) => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = l;
+      if (pub.type === v) o.selected = true;
+      typeSel.appendChild(o);
+    });
+    typeSel.onchange = e => { pub.type = e.target.value; save('publications', data.publications); };
+
+    const statusSel = document.createElement('select');
+    statusSel.className = 'pub-status-select';
+    [['drafting','Drafting'],['submitted','Submitted'],['under_review','Under Review'],['accepted','Accepted'],['published','Published'],['presented','Presented']].forEach(([v,l]) => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = l;
+      if (pub.status === v) o.selected = true;
+      statusSel.appendChild(o);
+    });
+    statusSel.onchange = e => {
+      pub.status = e.target.value;
+      save('publications', data.publications);
+      row.className = 'pub-row ' + (pub.status || '');
+    };
+
+    meta.appendChild(typeSel); meta.appendChild(statusSel);
+    row.appendChild(top); row.appendChild(meta);
+    list.appendChild(row);
+  });
+}
+
+function addPublication() {
+  data.publications.push({ title:'', type:'paper', status:'drafting' });
+  save('publications', data.publications);
+  renderPublications();
+  const inputs = document.querySelectorAll('.pub-title-input');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+// ══════════════════════════════════════════
+// DAILY PHRASE
+// ══════════════════════════════════════════
+
+const DAILY_PHRASES = [
+  "one thing at a time. just today.",
+  "progress, not perfection.",
+  "log it now. you'll forget by tomorrow.",
+  "the ward will always have more. your job is to prioritise.",
+  "rest is clinical. a tired surgeon makes errors.",
+  "you've cleared every hard shift so far.",
+  "one paragraph of thesis still counts.",
+  "ask for help. it's not weakness, it's sense.",
+  "post-call brain is real. lower the bar today.",
+  "you don't have to solve the whole year right now.",
+  "the finish line is closer than it was last year.",
+  "small things compound. show up anyway.",
+  "a good handover is better than a heroic midnight fix.",
+  "eat something. hydrate. basics first.",
+  "every case is teaching you something, even the messy ones.",
+  "you chose this. remember why on the hard days.",
+  "not behind. exactly where the training needs you.",
+  "three things. just the first one. then the next.",
+  "this is a stretch, not a permanent state.",
+  "dr. hanish. one shift at a time.",
+];
+
+function initDailyPhrase() {
+  const today = new Date().toISOString().slice(0, 10);
+  const seed = today.split('-').reduce((acc, n) => acc + parseInt(n), 0);
+  const phrase = DAILY_PHRASES[seed % DAILY_PHRASES.length];
+  const el = document.getElementById('phrase-text');
+  if (el) el.textContent = phrase;
+}
+
+
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ══════════════════════════════════════════
+// BACKUP & RESTORE
+// ══════════════════════════════════════════
+
+function toggleBackup() {
+  const drawer = document.getElementById('backup-drawer');
+  const overlay = document.getElementById('backup-overlay');
+  const isOpen = drawer.style.display === 'block';
+  drawer.style.display = isOpen ? 'none' : 'block';
+  overlay.style.display = isOpen ? 'none' : 'block';
+}
+
+function exportData() {
+  const keys = ['today','milestones','logbook','academicReqs','conferences','publications','leave','callLog','timestamps'];
+  const backup = { version: 3, exportedAt: new Date().toISOString(), examDate: data.examDate };
+  keys.forEach(k => {
+    backup[k] = safeParse('hanish_' + k, null) || data[k];
+  });
+
+  const json = JSON.stringify(backup, null, 2);
+  const date = new Date().toISOString().slice(0, 10);
+  const filename = `hanish_planner_backup_${date}.json`;
+
+  try {
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('✓ Backup downloaded');
+  } catch(e) {
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+    const w = window.open(dataUri, '_blank');
+    if (!w) { showExportModal(json); return; }
+    showToast('✓ Tap Share → Save to Files');
+  }
+  toggleBackup();
+}
+
+function showExportModal(json) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;padding:20px;gap:12px;';
+  overlay.innerHTML = `
+    <div style="color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1px;">COPY THIS BACKUP TEXT → PASTE INTO A NOTES APP</div>
+    <textarea readonly style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:11px;padding:12px;line-height:1.6;resize:none;">${json.replace(/</g,'&lt;')}</textarea>
+    <button onclick="this.parentElement.remove()" style="padding:14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:14px;cursor:pointer;">Close</button>
+  `;
+  // Make textarea actually show the raw text (no HTML escaping needed since it's a textarea)
+  const ta = overlay.querySelector('textarea');
+  ta.value = json;
+  ta.onclick = () => { ta.select(); document.execCommand('copy'); showToast('✓ Copied to clipboard'); };
+  document.body.appendChild(overlay);
+  toggleBackup();
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if (!backup.milestones && !backup.logbook) { showToast('✗ Invalid backup file'); return; }
+      if (backup.version && backup.version > 3) {
+        if (!confirm(`This backup is from a newer version (v${backup.version}). Some data may not restore correctly. Continue anyway?`)) return;
+      }
+      if (!confirm('This will replace all current data with the backup. Continue?')) return;
+
+      const keys = ['today','milestones','logbook','academicReqs','conferences','publications','leave','callLog','timestamps'];
+      keys.forEach(k => {
+        if (backup[k] !== undefined) {
+          data[k] = backup[k];
+          save(k, data[k]);
+        }
+      });
+      if (backup.examDate !== undefined) {
+        data.examDate = backup.examDate;
+        save('examDate', data.examDate);
+      }
+
+      initToday();
+      // Reset lazy flags so all pages re-init with fresh data
+      Object.keys(_pageInited).forEach(k => _pageInited[k] = false);
+      _pageInited.today = true;
+      initThesis(); _pageInited.thesis = true;
+      initLogbook(); _pageInited.logbook = true;
+      initAcademic(); _pageInited.academic = true;
+      toggleBackup();
+      showToast('✓ Restored from ' + (backup.exportedAt ? backup.exportedAt.slice(0,10) : 'backup'));
+    } catch(err) { showToast('✗ Could not read file'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+
+initDailyPhrase();
+initToday();
+_pageInited.today = true;
+// Thesis, Logbook, Academic are lazy-inited on first navigation to save startup time
+
+// Show swipe hint once on mobile (disappears automatically via CSS animation)
+if ('ontouchstart' in window && !localStorage.getItem('hanish_swipe_hinted')) {
+  const hint = document.getElementById('swipe-hint-bar');
+  if (hint) {
+    hint.style.display = 'block';
+    setTimeout(() => { hint.style.display = 'none'; }, 5000);
+    localStorage.setItem('hanish_swipe_hinted', '1');
+  }
+}
+
+// Auto-save when tab/app is hidden or closed — prevents data loss
+const _flushAll = () => {
+  saveTodayIfMeaningful(); // smart save — skips empty day entries
+  ['milestones','logbook','academicReqs','conferences','publications','leave','callLog','timestamps'].forEach(k => save(k, data[k]));
+};
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') _flushAll(); });
+window.addEventListener('beforeunload', _flushAll);
+
+// ── Periodic autosave every 30s — catches Android force-kills where visibilitychange doesn't fire ──
+const ALL_KEYS = ['today','milestones','logbook','academicReqs','conferences','publications','leave','callLog','timestamps'];
+setInterval(() => {
+  ALL_KEYS.forEach(k => save(k, data[k]));
+}, 30000);
+
+// ── Keyboard shortcut: Cmd/Ctrl+S = Close the Day ──
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    saveDay();
+  }
+});
+
+// ── Swipe navigation between tabs (mobile) ──
+(function() {
+  const PAGES = ['today', 'thesis', 'logbook', 'academic'];
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+  let swiping = false;
+
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
+    swiping = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const dt = Date.now() - touchStartTime;
+    // Must be mostly horizontal, fast enough, and long enough
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.8 || dt > 400) return;
+    // Find current page
+    const activePage = document.querySelector('.page.active');
+    if (!activePage) return;
+    const currentName = activePage.id.replace('page-', '');
+    const idx = PAGES.indexOf(currentName);
+    if (idx === -1) return;
+    if (dx < 0 && idx < PAGES.length - 1) showPage(PAGES[idx + 1]); // swipe left → next
+    if (dx > 0 && idx > 0) showPage(PAGES[idx - 1]);                 // swipe right → prev
+  }, { passive: true });
+})();
+</script>
+
+<!-- Splash screen for PWA cold launch -->
+<style>
+#splash {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0d1117;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  transition: opacity 0.4s ease;
+}
+#splash svg { width: 72px; height: 72px; }
+#splash-name {
+  font-family: 'DM Sans', -apple-system, 'Roboto', system-ui, sans-serif;
+  font-size: 18px; font-weight: 600; color: #cdd9e5; letter-spacing: -0.3px;
+}
+#splash-sub {
+  font-family: 'DM Mono', ui-monospace, 'Roboto Mono', monospace;
+  font-size: 10px; color: #4a5568; letter-spacing: 1.5px; text-transform: uppercase;
+}
+</style>
+<div id="splash">
+  <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <rect width="512" height="512" rx="100" fill="#161b22"/>
+    <text x="256" y="330" font-family="Georgia,serif" font-size="280" font-weight="700"
+          fill="#5eafd8" text-anchor="middle">H</text>
+    <circle cx="256" cy="256" r="230" fill="none" stroke="#253044" stroke-width="3"/>
+  </svg>
+  <div id="splash-name">Hanish</div>
+  <div id="splash-sub">one day at a time</div>
+</div>
+<script>
+// Hide splash once page is ready
+(function() {
+  function hideSplash() {
+    const s = document.getElementById('splash');
+    if (!s) return;
+    s.style.opacity = '0';
+    setTimeout(() => s.remove(), 420);
+  }
+  if (document.readyState === 'complete') {
+    setTimeout(hideSplash, 300);
+  } else {
+    window.addEventListener('load', () => setTimeout(hideSplash, 300));
+  }
+})();
+</script>
+</body>
+</html>
